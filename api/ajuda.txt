@@ -5,6 +5,24 @@ Linux/Mac:
 sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
 sudo chmod a+rx /usr/local/bin/yt-dlp
 
+https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc?pli=1
+
+Opção 1: Exportar do seu PC e enviar pro servidor (mais fácil)
+No seu computador pessoal (que tem navegador), instale a extensão:
+👉 Chrome: Get cookies.txt LOCALLY
+👉 Firefox: cookies.txt
+
+Acesse youtube.com logado
+Clique na extensão → Export
+Salva o cookies.txt
+Envie pro servidor:
+
+
+Opção 2: Instalar o Chrome no servidor agora
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+sudo apt --fix-broken install -y
+
 
 Windows (via winget):
 
