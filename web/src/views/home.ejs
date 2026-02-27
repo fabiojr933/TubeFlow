@@ -1,0 +1,1041 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TubeFlow – Converta YouTube para MP3 e MP4</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+  <rect width='100' height='100' rx='20' fill='%236f4cff'/>
+  <polygon points='40,30 70,50 40,70' fill='white'/>
+</svg>">
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6c5ce7;
+      --purple-light: #a29bfe;
+      --purple-dark: #5a4bd1;
+      --teal: #00b894;
+      --bg: #f4f5f7;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --card-shadow: 0 4px 24px rgba(108,92,231,0.08);
+      --radius: 20px;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 48px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--purple);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .logo-icon svg { fill: white; width: 20px; height: 20px; }
+
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: .95rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 90px 24px 60px;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ede9fe;
+      color: var(--purple);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+    }
+
+    .badge svg { width: 14px; height: 14px; fill: var(--purple); }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    h1 .mp3 { color: var(--purple); }
+    h1 .mp4 { color: var(--teal); }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto 40px;
+    }
+
+    /* ── CONVERTER BOX ── */
+    .converter-box {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 680px;
+      margin: 0 auto;
+      box-shadow: 0 8px 40px rgba(108,92,231,0.12);
+    }
+
+    .url-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      background: #fafafa;
+      transition: border-color .2s, box-shadow .2s;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .url-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      background: #fafafa;
+      margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+
+    .url-input-wrap:focus-within { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(108,92,231,.1); }
+
+    .url-input-wrap svg { flex-shrink: 0; color: #9ca3af; width: 20px; height: 20px; }
+
+    .url-input-wrap input {
+      border: none; background: transparent; outline: none;
+      font-family: inherit; font-size: 1rem; color: var(--text); width: 100%;
+    }
+
+    .url-input-wrap input::placeholder { color: #9ca3af; }
+
+    .format-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 28px;
+      border-radius: 12px;
+      border: 1.5px solid #e5e7eb;
+      background: transparent;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: .92rem;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex; align-items: center; gap: 7px;
+      color: var(--muted);
+    }
+
+    .tab.active {
+      background: #ede9fe;
+      border-color: var(--purple-light);
+      color: var(--purple);
+    }
+
+    .tab svg { width: 16px; height: 16px; }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: var(--purple);
+      color: white;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      letter-spacing: .01em;
+    }
+
+    .btn-primary:hover { background: var(--purple-dark); transform: translateY(-1px); }
+
+    /* ── HOW IT WORKS ── */
+    .section { padding: 80px 24px; }
+    .section-title { text-align: center; font-size: clamp(1.7rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 12px; }
+    .section-sub { text-align: center; color: var(--muted); font-size: 1rem; margin-bottom: 56px; }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      box-shadow: var(--card-shadow);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(108,92,231,0.14); }
+
+    .feature-icon {
+      width: 52px; height: 52px;
+      background: #ede9fe;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .feature-icon svg { width: 26px; height: 26px; color: var(--purple); }
+
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p { color: var(--muted); font-size: .95rem; line-height: 1.65; }
+
+    /* ── STEPS ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .step-num {
+      width: 48px; height: 48px;
+      background: var(--purple);
+      color: white;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+
+    .step h3 { font-weight: 700; margin-bottom: 8px; }
+    .step p { color: var(--muted); font-size: .93rem; }
+
+    /* ── FAQ ── */
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .faq-item {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .faq-q {
+      width: 100%; background: none; border: none;
+      padding: 22px 28px;
+      font-family: inherit; font-size: 1rem; font-weight: 600;
+      color: var(--text);
+      text-align: left; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px;
+    }
+
+    .faq-q .chevron {
+      flex-shrink: 0; width: 20px; height: 20px;
+      color: var(--purple); transition: transform .25s;
+    }
+
+    .faq-item.open .chevron { transform: rotate(180deg); }
+
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, padding .25s;
+      padding: 0 28px;
+      color: var(--muted); font-size: .95rem; line-height: 1.7;
+    }
+
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 28px 22px; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 0 24px 80px; }
+
+    .cta-box {
+      max-width: 900px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #6c5ce7 0%, #8b5cf6 50%, #4f46e5 100%);
+      border-radius: 28px;
+      padding: 72px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .cta-deco {
+      position: absolute; right: 48px; top: 50%;
+      transform: translateY(-50%);
+      opacity: .25;
+    }
+
+    .cta-deco svg { width: 100px; height: 100px; fill: white; }
+
+    .cta-box h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; color: white; margin-bottom: 14px; position: relative; }
+    .cta-box p { color: rgba(255,255,255,.85); font-size: 1.05rem; margin-bottom: 36px; position: relative; }
+
+    .btn-white {
+      display: inline-block;
+      background: white;
+      color: var(--purple);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      position: relative;
+      text-decoration: none;
+    }
+
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--white);
+      border-top: 1px solid #e5e7eb;
+      padding: 56px 48px 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 48px;
+      max-width: 1100px;
+      margin: 0 auto 48px;
+    }
+
+    .footer-brand p { color: var(--muted); font-size: .9rem; margin-top: 14px; line-height: 1.7; max-width: 240px; }
+
+    .footer-col h4 { font-weight: 700; font-size: .9rem; margin-bottom: 18px; color: var(--text); }
+    .footer-col a { display: block; color: var(--muted); font-size: .9rem; text-decoration: none; margin-bottom: 10px; transition: color .2s; }
+    .footer-col a:hover { color: var(--text); }
+
+    .social-icons { display: flex; gap: 12px; }
+    .social-icon {
+      width: 40px; height: 40px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .social-icon:hover { border-color: var(--purple); color: var(--purple); }
+    .social-icon svg { width: 18px; height: 18px; }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 28px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    /* ── MODAL ── */
+    #modalOverlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(15, 10, 40, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s ease;
+    }
+
+    #modalOverlay.active { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: white;
+      border-radius: 28px;
+      padding: 48px 40px 40px;
+      width: 90%; max-width: 460px;
+      box-shadow: 0 32px 80px rgba(108,92,231,.25);
+      position: relative;
+      transform: translateY(24px) scale(.96);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    #modalOverlay.active .modal { transform: translateY(0) scale(1); }
+
+    .modal-x {
+      position: absolute; top: 18px; right: 18px;
+      background: #f4f5f7; border: none; border-radius: 50%;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--muted);
+      transition: background .2s, color .2s;
+    }
+    .modal-x:hover { background: #ede9fe; color: var(--purple); }
+
+    .modal-icon-wrap {
+      position: relative;
+      width: 88px; height: 88px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .modal-spinner {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 4px solid #ede9fe;
+      border-top-color: var(--purple);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .modal-icon-inner {
+      width: 68px; height: 68px;
+      background: linear-gradient(135deg, var(--purple), #8b5cf6);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(108,92,231,.35);
+    }
+
+    .modal-title {
+      font-size: 1.25rem; font-weight: 800; color: var(--text); margin-bottom: 6px;
+    }
+
+    .modal-sub {
+      color: var(--muted); font-size: .95rem; transition: opacity .3s;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    .progress-track {
+      flex: 1; height: 10px;
+      background: #ede9fe;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--purple), #a29bfe);
+      border-radius: 999px;
+      transition: width .08s linear;
+    }
+
+    .progress-pct {
+      font-weight: 700; font-size: .9rem;
+      color: var(--purple); min-width: 36px; text-align: right;
+    }
+
+    .modal-hint {
+      font-size: .85rem; color: #9ca3af; text-align: center;
+    }
+
+    .modal-success-icon {
+      width: 88px; height: 88px;
+      background: linear-gradient(135deg, #00b894, #00cec9);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 28px rgba(0,184,148,.3);
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .btn-download {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--purple);
+      color: white; font-family: inherit;
+      font-weight: 700; font-size: 1rem;
+      padding: 15px 36px;
+      border: none; border-radius: 14px; cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .btn-download:hover { background: var(--purple-dark); transform: translateY(-1px); }
+
+    .btn-close-link {
+      background: none; border: none;
+      font-family: inherit; color: var(--muted);
+      font-size: .9rem; cursor: pointer;
+      transition: color .2s;
+    }
+    .btn-close-link:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .cta-deco { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+ <a href="/" class="logo">
+  <div class="logo-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#6f4cff"/>
+      <polygon points="40,30 70,50 40,70" fill="white"/>
+    </svg>
+  </div>
+  TubeFlow
+</a>
+
+  <ul class="nav-links">
+    <li><a href="#recursos">Recursos</a></li>
+    <li><a href="#como">Como funciona</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">
+    <svg viewBox="0 0 24 24"><path d="M13 2L4.09 12.97 12 12l-1 9 9-9.97L12 12l1-10z"/></svg>
+    Rápido, Grátis e Ilimitado
+  </div>
+  <h1>Converta YouTube para<br><span class="mp3">MP3</span> e <span class="mp4">MP4</span> em segundos.</h1>
+  <p class="hero-sub">A ferramenta mais simples para baixar seus vídeos favoritos. Sem anúncios irritantes, sem registros, apenas o conteúdo que você ama.</p>
+
+  <div class="converter-box">
+    <div class="url-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/>
+      </svg>
+      <input type="url" placeholder="Cole o link do YouTube aqui..." id="urlInput"/>
+    </div>
+    <div class="format-tabs">
+      <button class="tab active" id="tabMP3" onclick="selectTab('MP3')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        MP3
+      </button>
+      <button class="tab" id="tabMP4" onclick="selectTab('MP4')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+        MP4
+      </button>
+    </div>
+    <button class="btn-primary" onclick="startConvert()">Começar Agora →</button>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="recursos">
+  <h2 class="section-title">Por que escolher o TubeFlow?</h2>
+  <p class="section-sub">Tudo que você precisa em um só lugar</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.09 12.97 12 12l-1 9 9-9.97L12 12l1-10z"/></svg>
+      </div>
+      <h3>Ultra Rápido</h3>
+      <p>Conversão instantânea. Seus arquivos ficam prontos em segundos.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3>Seguro e Privado</h3>
+      <p>Nenhum dado é armazenado. Sua privacidade é nossa prioridade.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <h3>Multiplataforma</h3>
+      <p>Funciona em qualquer dispositivo: celular, tablet ou computador.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      </div>
+      <h3>Qualidade de Áudio</h3>
+      <p>MP3 em até 320kbps. Som cristalino em seus fones.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </div>
+      <h3>Sem Instalação</h3>
+      <p>Nada para instalar. Use diretamente do seu navegador.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <h3>Acesso Global</h3>
+      <p>Disponível em qualquer lugar do mundo, sem restrições.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="como" style="background: white;">
+  <h2 class="section-title">Como funciona</h2>
+  <p class="section-sub">Três passos simples para ter seu arquivo</p>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Cole o link</h3>
+      <p>Copie a URL do vídeo do YouTube e cole no campo acima.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Escolha o formato</h3>
+      <p>Selecione MP3 para áudio ou MP4 para vídeo.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Baixe seu arquivo</h3>
+      <p>Clique em Começar e faça o download em segundos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <h2 class="section-title">Perguntas Frequentes</h2>
+  <p class="section-sub">Tudo o que você precisa saber sobre o TubeFlow</p>
+  <div class="faq-list">
+    <div class="faq-item open">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        É legal baixar vídeos do YouTube?
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">A legalidade depende do conteúdo e das leis do seu país. Você é responsável por respeitar os direitos autorais. Recomendamos baixar apenas conteúdo licenciado ou que você tenha permissão do criador.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Qual é o tamanho máximo de arquivo?
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">Não há um limite estrito de tamanho de arquivo, mas vídeos extremamente longos (mais de 2 horas) podem levar mais tempo para serem processados pelos nossos servidores.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Quanto tempo leva para converter?
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">A maioria das conversões é concluída em menos de 30 segundos. O tempo exato depende da duração do vídeo original e da carga atual do servidor.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Preciso criar uma conta?
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">Não! O TubeFlow é 100% gratuito e não requer cadastro. Basta colar o link e converter.</div>
+    </div>
+     <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Os dados do meu vídeo são salvos?
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">Não! Nós não armazenamos nenhum arquivo ou dados pessoal. Tudo é processado e deletado automaticamente após o download..</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-deco">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/><path d="M12 16l-4-4h8l-4 4z"/></svg>
+    </div>
+    <h2>Pronto para começar a baixar?</h2>
+    <p>Junte-se a milhares de pessoas que já usam o TubeFlow para salvar seus conteúdos favoritos.</p>
+    <a href="#" class="btn-white" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Voltar ao Topo</a>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+
+    <div id="modalStep1" style="display:flex; flex-direction:column; align-items:center; gap:24px;">
+      <div class="modal-icon-wrap">
+        <div class="modal-spinner"></div>
+        <div class="modal-icon-inner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+            <path d="M12 2v13M5 15l7 7 7-7"/><line x1="2" y1="22" x2="22" y2="22"/>
+          </svg>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <h3 class="modal-title">Preparando seu arquivo</h3>
+        <p class="modal-sub" id="progressLabel">Iniciando conversão...</p>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <span class="progress-pct" id="progressPct">0%</span>
+      </div>
+      <p class="modal-hint">Por favor, aguarde. Isso leva apenas alguns segundos ⚡</p>
+    </div>
+
+    <div id="modalStep2" style="display:none; flex-direction:column; align-items:center; gap:24px; text-align:center;">
+      <div class="modal-success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="36" height="36">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="modal-title">Arquivo pronto! 🎉</h3>
+        <p class="modal-sub">Seu download começará automaticamente.</p>
+      </div>
+      <button class="btn-download" onclick="downloadFile()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 2v13M5 15l7 7 7-7"/><line x1="2" y1="22" x2="22" y2="22"/></svg>
+        Baixar Arquivo
+      </button>
+      <button class="btn-close-link" onclick="closeModal()">Fechar</button>
+    </div>
+
+    <button class="modal-x" onclick="closeModal()" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="margin-bottom:0">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        </div>
+        TubeFlow
+      </a>
+      <p>A ferramenta definitiva para conversão de mídia online. Simples, rápida e gratuita para sempre.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produto</h4>
+      <a href="#">Conversor MP3</a>
+      <a href="#">Conversor MP4</a>
+    </div>
+    <div class="footer-col">
+      <h4>Suporte</h4>
+      <a href="#">Central de Ajuda</a>
+    </div>
+    <div class="footer-col">
+      
+    </div>
+  </div>
+ <div class="footer-bottom">
+  © 2026 <strong>TubeFlow</strong>. Todos os direitos reservados. Desenvolvido por <strong>Fox Sistemas</strong>.
+</div>
+
+</footer>
+
+<script>
+  // Desativar clique direito
+document.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+});
+
+// Desativar Ctrl+U, Ctrl+S, Ctrl+Shift+I, F12
+document.addEventListener('keydown', (e) => {
+  if (
+    (e.ctrlKey && e.key === 'u') || // Ver código fonte
+    (e.ctrlKey && e.key === 's') || // Salvar página
+    (e.ctrlKey && e.shiftKey && e.key === 'I') || // DevTools
+    (e.ctrlKey && e.shiftKey && e.key === 'J') || // Console
+    (e.ctrlKey && e.shiftKey && e.key === 'C') || // Inspecionar
+    e.key === 'F12' // DevTools
+  ) {
+    e.preventDefault();
+  }
+});
+</script>
+
+<script>
+  let activeFormat = 'MP3';
+  let downloadUrl = null;
+  let downloadFileName = null;
+
+  function selectTab(format) {
+    activeFormat = format;
+    document.getElementById('tabMP3').classList.toggle('active', format === 'MP3');
+    document.getElementById('tabMP4').classList.toggle('active', format === 'MP4');
+  }
+
+ async function startConvert() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) {
+    document.querySelector('.url-input-wrap').style.borderColor = '#ef4444';
+    document.getElementById('urlInput').placeholder = 'Por favor, cole um link válido!';
+    setTimeout(() => {
+      document.querySelector('.url-input-wrap').style.borderColor = '';
+      document.getElementById('urlInput').placeholder = 'Cole o link do YouTube aqui...';
+    }, 2000);
+    return;
+  }
+
+  // ✅ Verifica API antes de abrir o modal
+  const isOnline = await checkApiStatus();
+  if (!isOnline) {
+    showServerOfflineModal();
+    return;
+  }
+
+  openModal(url);
+}
+
+  async function openModal(videoUrl) {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Reset state
+    downloadUrl = null;
+    downloadFileName = null;
+    document.getElementById('modalStep1').style.display = 'flex';
+    document.getElementById('modalStep2').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressPct').textContent = '0%';
+    document.getElementById('progressLabel').textContent = 'Iniciando conversão...';
+
+    const format = activeFormat.toLowerCase(); // 'mp3' ou 'mp4'
+    const endpoint = `http://localhost:3021/api/download/${format}`;
+    const token = 'eyJhbGciOiJIUzI1';
+
+    // Animate progress (fake) enquanto a API processa
+    let pct = 0;
+    let finished = false;
+    const messages = [
+      { at: 0,  text: 'Iniciando conversão...' },
+      { at: 20, text: 'Analisando o vídeo...' },
+      { at: 45, text: 'Extraindo o áudio...' },
+      { at: 70, text: 'Otimizando o arquivo...' },
+      { at: 90, text: 'Quase pronto...' },
+    ];
+
+    // Barra de progresso vai até 90% enquanto aguarda a API
+    const interval = setInterval(() => {
+      if (finished) return;
+      if (pct < 90) {
+        pct += 1;
+        document.getElementById('progressBar').style.width = pct + '%';
+        document.getElementById('progressPct').textContent = pct + '%';
+        const msg = messages.filter(m => m.at <= pct).pop();
+        if (msg) document.getElementById('progressLabel').textContent = msg.text;
+      }
+    }, 80);
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ url: videoUrl }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao processar o vídeo.');
+      }
+
+      // Salva dados do download
+      downloadUrl = `http://localhost:3021${data.url}`;
+      downloadFileName = data.file;
+
+      // Completa a barra para 100%
+      finished = true;
+      clearInterval(interval);
+      pct = 100;
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('progressPct').textContent = '100%';
+      document.getElementById('progressLabel').textContent = 'Concluído!';
+
+      setTimeout(() => {
+        document.getElementById('modalStep1').style.display = 'none';
+        document.getElementById('modalStep2').style.display = 'flex';
+      }, 400);
+
+    } catch (error) {
+      finished = true;
+      clearInterval(interval);
+      document.getElementById('progressLabel').textContent = '❌ ' + error.message;
+      document.getElementById('progressBar').style.background = '#ef4444';
+    }
+  }
+
+ async function downloadFile() {
+  if (!downloadUrl) return;
+
+  try {
+    const token = 'eyJhbGciOiJIUzI1';
+
+    const response = await fetch(downloadUrl, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) throw new Error('Falha ao baixar o arquivo.');
+
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = downloadFileName || 'download'; // força download pelo nome do arquivo
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+
+  } catch (error) {
+    alert('Erro ao baixar o arquivo: ' + error.message);
+  }
+}
+
+  function closeModal() {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  function toggleFaq(btn) {
+    btn.parentElement.classList.toggle('open');
+  }
+
+  async function checkApiStatus() {
+  try {
+    const response = await fetch('http://localhost:3021/api/download/status', {
+      signal: AbortSignal.timeout(5000) // timeout de 5s
+    });
+    const data = await response.json();
+    return data.status === 'ok';
+  } catch {
+    return false;
+  }
+}
+
+function showServerOfflineModal() {
+  // Cria o modal de erro se não existir
+  if (!document.getElementById('offlineModal')) {
+    const modal = document.createElement('div');
+    modal.id = 'offlineModal';
+    modal.innerHTML = `
+      <div style="
+        position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+        display: flex; align-items: center; justify-content: center;
+        z-index: 9999; backdrop-filter: blur(4px);
+      ">
+        <div style="
+          background: #1a1a2e; border: 1px solid #ef4444;
+          border-radius: 16px; padding: 40px; max-width: 420px;
+          width: 90%; text-align: center; color: #fff;
+          box-shadow: 0 0 40px rgba(239,68,68,0.3);
+        ">
+          <div style="font-size: 56px; margin-bottom: 16px;">🔴</div>
+          <h2 style="color: #ef4444; margin: 0 0 12px; font-size: 22px;">Servidor Offline</h2>
+          <p style="color: #aaa; margin: 0 0 8px; line-height: 1.6;">
+            Não foi possível conectar ao servidor de conversão.
+          </p>
+          <p style="color: #666; font-size: 13px; margin: 0 0 28px;">
+            O serviço pode estar em manutenção ou temporariamente indisponível. Tente novamente em alguns minutos.
+          </p>
+          <button onclick="document.getElementById('offlineModal').remove()" style="
+            background: #ef4444; color: #fff; border: none;
+            padding: 12px 32px; border-radius: 8px; font-size: 15px;
+            cursor: pointer; font-weight: 600;
+            transition: background 0.2s;
+          " onmouseover="this.style.background='#dc2626'"
+             onmouseout="this.style.background='#ef4444'">
+            Fechar
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+ Instalar o yt-dlp no sistema
+O yt-dlp precisa estar disponível no sistema. Escolha conforme seu SO:
+Linux/Mac:
+
+sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp
+
+
+Windows (via winget):
+
+winget install yt-dlp
