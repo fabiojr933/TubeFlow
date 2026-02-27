@@ -868,7 +868,7 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('progressLabel').textContent = 'Iniciando conversão...';
 
     const format = activeFormat.toLowerCase(); // 'mp3' ou 'mp4'
-    const endpoint = `http://localhost:3021/api/download/${format}`;
+    const endpoint = `http://209.50.228.75:3021/api/download/${format}`;
     const token = 'eyJhbGciOiJIUzI1';
 
     // Animate progress (fake) enquanto a API processa
@@ -911,7 +911,7 @@ document.addEventListener('keydown', (e) => {
       }
 
       // Salva dados do download
-      downloadUrl = `http://localhost:3021${data.url}`;
+      downloadUrl = `http://209.50.228.75:3021${data.url}`;
       downloadFileName = data.file;
 
       // Completa a barra para 100%
@@ -985,7 +985,7 @@ document.addEventListener('keydown', (e) => {
 
   async function checkApiStatus() {
   try {
-    const response = await fetch('http://localhost:3021/api/download/status', {
+    const response = await fetch('http://209.50.228.75:3021/api/download/status', {
       signal: AbortSignal.timeout(5000) // timeout de 5s
     });
     const data = await response.json();
