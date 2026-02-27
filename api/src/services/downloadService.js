@@ -2,6 +2,7 @@ const YTDlpWrap = require('yt-dlp-wrap').default;
 const ffmpegPath = require('ffmpeg-static');
 const path = require('path');
 const fs = require('fs');
+const COOKIES_PATH = path.join(__dirname, '..', '..', 'cookies.txt');
 
 // Pastas de saída
 const MP3_DIR = path.join(__dirname, '..', '..', 'public', 'mp3');
@@ -40,10 +41,19 @@ const initYtDlp = async () => {
 /**
  * Argumentos padrão que incluem o Node.js como JS runtime
  */
-const defaultArgs = () => [
-  '--js-runtimes', `node:${NODE_PATH}`,
-  '--no-playlist',
-];
+const defaultArgs = () => {
+  const args = [
+    '--js-runtimes', `node:${NODE_PATH}`,
+    '--no-playlist',
+  ];
+
+  // Adiciona cookies se o arquivo existir
+  if (fs.existsSync(COOKIES_PATH)) {
+    args.push('--cookies', COOKIES_PATH);
+  }
+
+  return args;
+};
 
 /**
  * Gera um nome de arquivo seguro
