@@ -45,7 +45,7 @@ const defaultArgs = () => {
   const args = [
     '--js-runtimes', `node:${NODE_PATH}`,
     '--no-playlist',
-    '--proxy', 'socks5://127.0.0.1:1080',  // <-- proxy BR
+    '--extractor-args', 'youtube:player_client=web,mweb'
   ];
 
   if (fs.existsSync(COOKIES_PATH)) {
@@ -54,6 +54,7 @@ const defaultArgs = () => {
 
   return args;
 };
+
 
 /**
  * Gera um nome de arquivo seguro
