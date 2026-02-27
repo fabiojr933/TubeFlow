@@ -45,8 +45,7 @@ const defaultArgs = () => {
   const args = [
     '--js-runtimes', `node:${NODE_PATH}`,
     '--no-playlist',
-    '--extractor-args', 'youtube:player_client=web,mweb',
-    '--geo-bypass-country', 'BR',  // força bypass como se fosse BR
+    '--proxy', 'socks5://127.0.0.1:1080',  // <-- proxy BR
   ];
 
   if (fs.existsSync(COOKIES_PATH)) {
