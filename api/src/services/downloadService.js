@@ -45,13 +45,10 @@ const defaultArgs = () => {
   const args = [
     '--js-runtimes', `node:${NODE_PATH}`,
     '--no-playlist',
-    '--proxy', 'http://wfccxydm:wb6f6tse3w69@185.72.240.69:7105',
   ];
-
   if (fs.existsSync(COOKIES_PATH)) {
     args.push('--cookies', COOKIES_PATH);
   }
-
   return args;
 };
 
